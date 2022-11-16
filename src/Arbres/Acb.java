@@ -1,5 +1,5 @@
 package Arbres;
 
-public class Acb {
+public class Acb<E extends Comparable<E>>{
     
 }
