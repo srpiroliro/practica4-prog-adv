@@ -2,32 +2,19 @@ package Arbres;
 
 import java.util.Queue;
 
-public class AcbEnll<E extends Comparable<E>> implements Acb{
+public class AcbEnll<E extends Comparable<E>> implements Acb<E>{
 
-    AcbEnll(){ }
+    AcbEnll(NodeA n){arrel=n;cua=null;}
 
     public E arrel() throws ArbreException{
         if(arrel==null) throw new ArbreException("Arbre buit");
-        return (E) arrel; // CHECK
+        return (E) arrel;
     }
 
-    public Acb<E> fillEsquerre(){
-        /* Si no te fill retorna un arbre buit. */
-        return null;
-    }
-
-    public Acb<E> fillDret(){
-        /* Si no te fill retorna un arbre buit. */
-        return null;
-    }
-
-    public boolean abBuit(){
-        return false;
-    }
-
-    public void buidar(){
-        return;
-    }
+    public Acb<E> fillEsquerre(){ return new AcbEnll<E>((arrel==null)?null:arrel.esq); }
+    public Acb<E> fillDret(){ return new AcbEnll<E>((arrel==null)?null:arrel.dret); }
+    public boolean abBuit(){return arrel==null;}
+    public void buidar(){arrel=null;}
 
     public void inserir(E e) throws ArbreException{
         if(arrel==null) arrel=new NodeA(e, null, null);
@@ -52,13 +39,10 @@ public class AcbEnll<E extends Comparable<E>> implements Acb{
         NodeA esq, dret; 
         E inf;
 
-        NodeA(){this(null);}
         NodeA(E e){this(e,null,null);}
-        NodeA(E e, NodeA l, NodeA r){
-            inf=e; esq=l; dret=r;
-        }
-        // CHECK: public vs private
-        private void inserir(E e) throws ArbreException{ // AS IN arbres_acb
+        NodeA(E e, NodeA l, NodeA r){inf=e; esq=l; dret=r;}
+
+        private void inserir(E e) throws ArbreException{
             if(e.compareTo(inf)<0){
                 if(esq!=null) esq.inserir(e);
                 else esq=new NodeA(e);
@@ -67,8 +51,8 @@ public class AcbEnll<E extends Comparable<E>> implements Acb{
                 else dret=new NodeA(e);
             } else throw new ArbreException("element ja hi es");
         }
-        // CHECK: public vs private
-        private NodeA esborrar(E e) throws ArbreException{ // AS IN arbres_acb
+
+        private NodeA esborrar(E e) throws ArbreException{
             if(e.compareTo(inf)<0){
                 if(esq!=null){
                     esq=esq.esborrar(e); return this;
@@ -81,24 +65,23 @@ public class AcbEnll<E extends Comparable<E>> implements Acb{
                 inf=dret.buscarMinim();
                 dret=dret.esborrar(inf);
                 return this;
-            } else return(esq==null && dret==null)?null:( (esq==null)?dret:esq );
+            } else return(esq==null && dret==null)?null:((esq==null)?dret:esq);
         }
-        // CHECK: public vs private
-        public boolean hiEs(E e){ // AS IN arbres_acb
-            if(e.compareTo(inf)<0)
-                return (esq==null)?false:esq.hiEs(e);
-            else if (e.compareTo(inf)>0)
-                return (dret==null)?false:dret.hiEs(e);
+
+        private boolean hiEs(E e){
+            if(e.compareTo(inf)<0) return (esq==null)?false:esq.hiEs(e);
+            else if (e.compareTo(inf)>0) return (dret==null)?false:dret.hiEs(e);
             else return true;
         }
 
-        // AS IN arbres_acb
         private E buscarMinim(){
             if(esq==null) return inf;
             NodeA a=esq; while(a.esq!=null) a=a.esq;
             return a.inf;
         }
-
+        private E inordre(boolean sentit){
+            return arrel.esq.inf;
+        }
     }
     private Queue<E> cua;
     private NodeA arrel;
@@ -110,7 +93,7 @@ public class AcbEnll<E extends Comparable<E>> implements Acb{
             aquest mètode, la invocació del mètode segRecorregut retornarà el  
             primer element en inordre de l’arbre. Aquest mètode ha d’emplenar l’atribut 
             cua amb els elements de l’arbre aplicant un recorregut en inordre. Cal tenir 
-            present el paràmetre alhora d’emplenar la cua 
+            present el paràmetre alhora d’emplenar la cua
 
             inicialització del recorregut té un paràmetre de true el recorregut a seguir 
             serà l’inordre treballat a classe de teoria, si és false serà un inordre
@@ -121,6 +104,13 @@ public class AcbEnll<E extends Comparable<E>> implements Acb{
             iniRecorregut. I si un cop inicialitzat s’invoca algun mètode que modifica
             el contingut de l’arbre tampoc, caldria invocar novament al  mètode d’inicialització.
         */ 
+
+        NodeA a=arrel;
+        if(a!=null){
+            E s=a.inordre(sentit);
+            // add to cua
+        }
+
     }
 
     public boolean finalRecorregut(){
