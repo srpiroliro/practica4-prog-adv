@@ -79,8 +79,16 @@ public class AcbEnll<E extends Comparable<E>> implements Acb<E>{
             NodeA a=esq; while(a.esq!=null) a=a.esq;
             return a.inf;
         }
-        private E inordre(boolean sentit){
-            return arrel.esq.inf;
+        private void inordre(boolean sentit, Queue<E> c){
+            // OPTIMITZAR
+
+            if(arrel.esq!=null && sentit) arrel.esq.inordre(sentit, c);
+            else if(arrel.dret!=null && !sentit) arrel.dret.inordre(sentit, c);
+
+            c.add(arrel.inf);
+
+            if(arrel.dret!=null && sentit) arrel.dret.inordre(sentit, c);
+            else if(arrel.esq!=null && !sentit) arrel.esq.inordre(sentit, c);
         }
     }
     private Queue<E> cua;
@@ -104,12 +112,8 @@ public class AcbEnll<E extends Comparable<E>> implements Acb<E>{
             iniRecorregut. I si un cop inicialitzat s’invoca algun mètode que modifica
             el contingut de l’arbre tampoc, caldria invocar novament al  mètode d’inicialització.
         */ 
-
-        NodeA a=arrel;
-        if(a!=null){
-            E s=a.inordre(sentit);
-            // add to cua
-        }
+        if(arrel!=null) 
+        arrel.inordre(sentit, cua);
 
     }
 
