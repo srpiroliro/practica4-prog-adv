@@ -1,5 +1,6 @@
 package Arbres;
 
+import java.util.LinkedList;
 import java.util.Queue;
 
 public class AcbEnll<E extends Comparable<E>> implements Acb<E>{
@@ -14,14 +15,21 @@ public class AcbEnll<E extends Comparable<E>> implements Acb<E>{
     public Acb<E> fillEsquerre(){ return new AcbEnll<E>((arrel==null)?null:arrel.esq); }
     public Acb<E> fillDret(){ return new AcbEnll<E>((arrel==null)?null:arrel.dret); }
     public boolean abBuit(){return arrel==null;}
-    public void buidar(){arrel=null;}
+    public void buidar(){
+        arrel=null;
+        cua=null; // CHECK
+    }
 
     public void inserir(E e) throws ArbreException{
+        cua=null; // CHECK
+
         if(arrel==null) arrel=new NodeA(e, null, null);
         else arrel.inserir(e);
     }
 
     public void esborrar(E e) throws ArbreException{
+        cua=null; // CHECK
+
         if(arrel==null) throw new ArbreException("l'arbre es buit");
         arrel=arrel.esborrar(e);
     }
@@ -79,19 +87,16 @@ public class AcbEnll<E extends Comparable<E>> implements Acb<E>{
             NodeA a=esq; while(a.esq!=null) a=a.esq;
             return a.inf;
         }
-        private void inordre(boolean sentit, Queue<E> c){
-            // OPTIMITZAR
+        private void inordre(boolean sentit, Queue<E> c){ // TEST
+            NodeA a1=(sentit)?arrel.esq:arrel.dret;
+            NodeA a2=(sentit)?arrel.dret:arrel.esq;
 
-            if(arrel.esq!=null && sentit) arrel.esq.inordre(sentit, c);
-            else if(arrel.dret!=null && !sentit) arrel.dret.inordre(sentit, c);
-
+            if(a1!=null) a1.inordre(sentit, c);
             c.add(arrel.inf);
-
-            if(arrel.dret!=null && sentit) arrel.dret.inordre(sentit, c);
-            else if(arrel.esq!=null && !sentit) arrel.esq.inordre(sentit, c);
+            if(a2!=null) a2.inordre(sentit, c);
         }
     }
-    private Queue<E> cua;
+    private Queue<E> cua=null;
     private NodeA arrel;
 
 
@@ -112,8 +117,10 @@ public class AcbEnll<E extends Comparable<E>> implements Acb<E>{
             iniRecorregut. I si un cop inicialitzat s’invoca algun mètode que modifica
             el contingut de l’arbre tampoc, caldria invocar novament al  mètode d’inicialització.
         */ 
-        if(arrel!=null) 
-        arrel.inordre(sentit, cua);
+        if(arrel!=null){
+            cua=new LinkedList<>();
+            arrel.inordre(sentit, cua);
+        }
 
     }
 
@@ -122,9 +129,12 @@ public class AcbEnll<E extends Comparable<E>> implements Acb<E>{
             l’arbre. Això és si:  
             ‐ l’arbre és buit  
             ‐ la darrera vegada que es va invocar segRecorregut aquest mètode  
-            ja va retornar el darrer element en inordre de l’arbre.  
+               ja va retornar el darrer element en inordre de l’arbre.                 ???????????? 
+
             Tot això és el mateix que dir que retorna true quan no té sentit invocar el 
             mètode segRecorregut */
+
+        return cua.isEmpty();
     }
 
     public E segRecorregut() throws ArbreException {
@@ -136,6 +146,17 @@ public class AcbEnll<E extends Comparable<E>> implements Acb<E>{
             ‐ s’invoca quan entre la invocació de iniRecorregut i la del mètode 
             s’ha produït una modificació de l’arbre, això és, s’ha fet ús del 
             mètode inserir, esborrar, buidar */
+
+        if(cua==null||finalRecorregut()) throw new ArbreException("Cal iniciar recorregut!");
+
+        // Iterator<String> iterator = queue.iterator();
+        // while(iterator.hasNext(){
+        //     String element = iterator.next();
+        // }
+
+        E element=cua.peek(); // gets first element (returns null if there isnt one) 
+        cua.remove(); // removes first element
+        return element;
     }
 
 }
