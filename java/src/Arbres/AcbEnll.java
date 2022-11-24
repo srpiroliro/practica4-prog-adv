@@ -3,7 +3,7 @@ package Arbres;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class AcbEnll<E extends Comparable<E>> implements Acb<E>{
+public class AcbEnll<E extends Comparable<E>> implements Acb<E>, Cloneable {
 
     AcbEnll(NodeA n){arrel=n;cua=null;}
 
@@ -17,21 +17,19 @@ public class AcbEnll<E extends Comparable<E>> implements Acb<E>{
     public boolean abBuit(){return arrel==null;}
     public void buidar(){
         arrel=null;
-        cua=null; // CHECK
+        cua=null;
     }
 
     public void inserir(E e) throws ArbreException{
-        cua=null; // CHECK
-
         if(arrel==null) arrel=new NodeA(e, null, null);
         else arrel.inserir(e);
+        cua=null; // CHECK: will execute if an exception is thworn before?
     }
 
     public void esborrar(E e) throws ArbreException{
-        cua=null; // CHECK
-
         if(arrel==null) throw new ArbreException("l'arbre es buit");
         arrel=arrel.esborrar(e);
+        cua=null; // CHECK: will execute if an exception is thworn before?
     }
 
     public boolean membre(E e){
@@ -46,10 +44,7 @@ public class AcbEnll<E extends Comparable<E>> implements Acb<E>{
     }
 
     public boolean finalRecorregut(){
-        /* "la darrera vegada que es va invocar segRecorregut aquest mètode  
-            ja va retornar el darrer element en inordre de l’arbre."                ??? */
-
-        return cua.isEmpty();
+        return cua==null || cua.isEmpty();
     }
 
     public E segRecorregut() throws ArbreException {
@@ -60,12 +55,11 @@ public class AcbEnll<E extends Comparable<E>> implements Acb<E>{
 
     public Object clone(){return arrel.cloner();}
     public int cardinalitat(){
-        // iniRecorregut -> cua.size -> cua=old_cua
         return arrel.cardinalitat();
     }
 
     
-    private class NodeA{
+    private class NodeA implements Cloneable{
         NodeA esq, dret; E inf;
 
         NodeA(E e){this(e,null,null);}
@@ -126,8 +120,7 @@ public class AcbEnll<E extends Comparable<E>> implements Acb<E>{
             return (int)inf-(int)((NodeA)node).inf;
         }
 
-        private Object cloner(){ // CHECK
-            // "No es permet invocar a cap mètode de la classe en la seva implementació." ???
+        public Object cloner(){
             NodeA copia=null;
             try{
                 copia=(NodeA) super.clone();
