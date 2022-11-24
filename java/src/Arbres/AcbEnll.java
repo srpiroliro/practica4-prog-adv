@@ -9,7 +9,7 @@ public class AcbEnll<E extends Comparable<E>> implements Acb<E>{
 
     public E arrel() throws ArbreException{
         if(arrel==null) throw new ArbreException("Arbre buit");
-        return (E) arrel;
+        return (E)arrel;
     }
 
     public Acb<E> fillEsquerre(){ return new AcbEnll<E>((arrel==null)?null:arrel.esq); }
@@ -38,16 +38,43 @@ public class AcbEnll<E extends Comparable<E>> implements Acb<E>{
         return (arrel==null)?false:arrel.hiEs(e);
     }
 
+    public void iniRecorregut(boolean sentit){
+        if(arrel!=null){
+            cua=new LinkedList<>();
+            arrel.inordre(sentit, cua);
+        }
+    }
+
+    public boolean finalRecorregut(){
+        /* "la darrera vegada que es va invocar segRecorregut aquest mètode  
+            ja va retornar el darrer element en inordre de l’arbre."                ??? */
+
+        return cua.isEmpty();
+    }
+
+    public E segRecorregut() throws ArbreException {
+        if(cua==null||finalRecorregut()) throw new ArbreException("Cal iniciar recorregut!");
+        E element=cua.peek(); cua.remove();
+        return element;
+    }
+
+    public Object clone(){return arrel.cloner();}
+    public int cardinalitat(){
+        // iniRecorregut -> cua.size -> cua=old_cua
+        return arrel.cardinalitat();
+    }
+
+    
     private class NodeA{
-        NodeA esq, dret; 
-        E inf;
+        NodeA esq, dret; E inf;
 
         NodeA(E e){this(e,null,null);}
         NodeA(E e, NodeA l, NodeA r){inf=e; esq=l; dret=r;}
 
-        // compareTo(einf) or just einf-inf
+        // compareTo(einf) or just einf-inf ???
 
         private void inserir(E einf) throws ArbreException{
+            // int resta=inf-einf;
             if(compareTo(einf)<0){
                 if(esq!=null) esq.inserir(einf);
                 else esq=new NodeA(einf);
@@ -67,7 +94,7 @@ public class AcbEnll<E extends Comparable<E>> implements Acb<E>{
                     dret=dret.esborrar(einf); return this;
                 } else throw new ArbreException("no hi es");
             }else if(esq!=null&&dret!=null){
-                inf=dret.buscarMinim(); // ???? pq dret
+                inf=dret.buscarMinim(); // ??? pq dret
                 dret=dret.esborrar(inf);
                 return this;
             }else return(esq==null&&dret==null)?null:((esq==null)?dret:esq);
@@ -93,14 +120,14 @@ public class AcbEnll<E extends Comparable<E>> implements Acb<E>{
             if(a2!=null) a2.inordre(sentit, c);
         }
 
-        // CHECK: necessary?
+        // CHECK: necessary???
         // @Override
         public int compareTo(E node) { // CHECK (check for correctnes + test)
             return (int)inf-(int)((NodeA)node).inf;
         }
 
         private Object cloner(){ // CHECK
-            // "No es permet invocar a cap mètode de la classe en la seva implementació." ??????
+            // "No es permet invocar a cap mètode de la classe en la seva implementació." ???
             NodeA copia=null;
             try{
                 copia=(NodeA) super.clone();
@@ -119,32 +146,4 @@ public class AcbEnll<E extends Comparable<E>> implements Acb<E>{
     }
     private Queue<E> cua=null;
     private NodeA arrel;
-
-
-    public void iniRecorregut(boolean sentit){
-        if(arrel!=null){
-            cua=new LinkedList<>();
-            arrel.inordre(sentit, cua);
-        }
-    }
-
-    public boolean finalRecorregut(){
-        /* "la darrera vegada que es va invocar segRecorregut aquest mètode  
-            ja va retornar el darrer element en inordre de l’arbre."                ???????????? */
-
-        return cua.isEmpty();
-    }
-
-    public E segRecorregut() throws ArbreException {
-        if(cua==null||finalRecorregut()) throw new ArbreException("Cal iniciar recorregut!");
-        E element=cua.peek(); cua.remove();
-        return element;
-    }
-
-    public Object clone(){return arrel.cloner();}
-    public int cardinalitat(){
-        // iniRecorregut -> cua.size -> cua=old_cua
-        return arrel.cardinalitat();
-    }
-
 }

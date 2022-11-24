@@ -7,6 +7,6 @@
 3. Col·leccions de Java: Cua
 
 ## TO DO:
-- [ ] Part 1
-- [ ] Part 2
+- [X] Part 1 - CHECKs to do.
+- [X] Part 2 - CHECKs to do.
 - [ ] Part 3
