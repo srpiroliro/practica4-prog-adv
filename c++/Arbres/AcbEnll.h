@@ -5,12 +5,32 @@ using namespace std;
 
 class AcbEnll: public Acb{
     class NodeA{
-        int esq,dret; // !!! NodeA not int !!! create seperate files (.h and .cpp for each class)  
+        NodeA esq,dret; // !!! NodeA not int !!! create seperate files (.h and .cpp for each class)  
         int inf; // template<typename T> T 
         
         NodeA():NodeA(0){}
         NodeA(int val){inf=val; esq=0; dret=0;}
         NodeA(int val, NodeA e, NodeA d){inf=val; esq=e; dret=d;}
+
+        template<typename T>
+        void inserir(T einf){}
+
+        template<typename T>
+        NodeA esborrar(T einf){}
+
+        template<typename T>
+        bool hiEs(T e){}
+
+        template<typename T> T buscarMinim(){}
+
+        void inordre(bool sentit, queue<int> c){}
+
+        int cardinalitat(){
+            int h=0;
+            if(esq!=NULL) h+=esq.cardinalitat();
+            if(dret!=NULL) h+=dret.cardinalitat();
+        }
+        
     };
 
     NodeA arrel;
@@ -48,8 +68,11 @@ class AcbEnll: public Acb{
 
         template<typename T> T segRecorregut(){}
         
-        Object 
+        AcbEnll clone(){}
 
+    int cardinalitat(){
+
+    }
     
 
     

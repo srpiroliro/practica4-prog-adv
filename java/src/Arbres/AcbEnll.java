@@ -9,7 +9,7 @@ public class AcbEnll<E extends Comparable<E>> implements Acb<E>, Cloneable {
 
     public E arrel() throws ArbreException{
         if(arrel==null) throw new ArbreException("Arbre buit");
-        return (E)arrel;
+        return (E) arrel;
     }
 
     public Acb<E> fillEsquerre(){ return new AcbEnll<E>((arrel==null)?null:arrel.esq); }
@@ -53,11 +53,17 @@ public class AcbEnll<E extends Comparable<E>> implements Acb<E>, Cloneable {
         return element;
     }
 
-    public Object clone(){return arrel.cloner();}
+    public Object clone(){return arrel.clone();}
     public int cardinalitat(){
         return arrel.cardinalitat();
     }
 
+
+    @Override
+    public int compareTo(AcbEnll<E> e){ // Object e
+        // if(!(e instanceof AcbEnll))  
+        return (int) inf-(int) e.inf;
+    }
     
     private class NodeA implements Cloneable{
         NodeA esq, dret; E inf;
@@ -65,7 +71,7 @@ public class AcbEnll<E extends Comparable<E>> implements Acb<E>, Cloneable {
         NodeA(E e){this(e,null,null);}
         NodeA(E e, NodeA l, NodeA r){inf=e; esq=l; dret=r;}
 
-        // compareTo(einf) or just einf-inf ???
+        // CHECK: compareTo(einf) or just einf-inf ???
 
         private void inserir(E einf) throws ArbreException{
             // int resta=inf-einf;
@@ -87,11 +93,17 @@ public class AcbEnll<E extends Comparable<E>> implements Acb<E>, Cloneable {
                 if(dret!=null){
                     dret=dret.esborrar(einf); return this;
                 } else throw new ArbreException("no hi es");
-            }else if(esq!=null&&dret!=null){
-                inf=dret.buscarMinim(); // ??? pq dret
-                dret=dret.esborrar(inf);
+            }else if(esq!=null&&dret!=null){ // CHECK
+                dret=dret.esborrar(
+                    dret.buscarMinim()
+                );
                 return this;
-            }else return(esq==null&&dret==null)?null:((esq==null)?dret:esq);
+            }else 
+                return(
+                    (esq==null&&dret==null)?
+                    null:
+                    ((esq==null)?dret:esq)
+                );
         }
 
         private boolean hiEs(E einf){
@@ -116,16 +128,16 @@ public class AcbEnll<E extends Comparable<E>> implements Acb<E>, Cloneable {
 
         // CHECK: necessary???
         // @Override
-        public int compareTo(E node) { // CHECK (check for correctnes + test)
-            return (int)inf-(int)((NodeA)node).inf;
-        }
+        // public int compareTo(E node) { // CHECK (check for correctnes + test)
+        //     return (int)inf-(int)((NodeA)node).inf;
+        // }
 
-        public Object cloner(){
+        public Object clone(){
             NodeA copia=null;
             try{
                 copia=(NodeA) super.clone();
-                if(esq!=null)  copia.esq=(NodeA)  esq.cloner();
-                if(dret!=null) copia.dret=(NodeA) dret.cloner();
+                if(esq!=null) copia.esq=(NodeA) esq.clone();
+                if(dret!=null) copia.dret=(NodeA) dret.clone();
             }catch(CloneNotSupportedException e){}
             return copia;
         }
