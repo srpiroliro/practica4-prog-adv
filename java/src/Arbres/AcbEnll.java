@@ -23,20 +23,20 @@ public class AcbEnll<E extends Comparable<E>> implements Acb<E>, Cloneable {
     public void inserir(E e) throws ArbreException{
         if(arrel==null) arrel=new NodeA(e, null, null);
         else arrel.inserir(e);
-        cua=null; // CHECK: will execute if an exception is thworn before?
+        cua=null; // CHECK: will execute if an exception is thrown before?
     }
 
     public void esborrar(E e) throws ArbreException{
         if(arrel==null) throw new ArbreException("l'arbre es buit");
         arrel=arrel.esborrar(e);
-        cua=null; // CHECK: will execute if an exception is thworn before?
+        cua=null; // CHECK: will execute if an exception is thrown before?
     }
 
     public boolean membre(E e){
         return (arrel==null)?false:arrel.hiEs(e);
     }
 
-    public void iniRecorregut(boolean sentit){
+    public void iniRecorregut(boolean sentit){ // TEST
         if(arrel!=null){
             cua=new LinkedList<>();
             arrel.inordre(sentit, cua);
@@ -54,16 +54,15 @@ public class AcbEnll<E extends Comparable<E>> implements Acb<E>, Cloneable {
     }
 
     public Object clone(){return arrel.clone();}
-    public int cardinalitat(){
-        return arrel.cardinalitat();
-    }
+    public int cardinalitat(){return arrel.cardinalitat();}
 
 
-    @Override
-    public int compareTo(AcbEnll<E> e){ // Object e
-        // if(!(e instanceof AcbEnll))  
-        return (int) inf-(int) e.inf;
-    }
+    // CHECK: here or in NodeA + correct?
+    // @Override
+    // public int compareTo(E e){
+    //     // if(!(e instanceof AcbEnll)) CHECK: necessary? 
+    //     return (int) arrel.inf-(int) e;
+    // }
     
     private class NodeA implements Cloneable{
         NodeA esq, dret; E inf;
@@ -71,10 +70,7 @@ public class AcbEnll<E extends Comparable<E>> implements Acb<E>, Cloneable {
         NodeA(E e){this(e,null,null);}
         NodeA(E e, NodeA l, NodeA r){inf=e; esq=l; dret=r;}
 
-        // CHECK: compareTo(einf) or just einf-inf ???
-
         private void inserir(E einf) throws ArbreException{
-            // int resta=inf-einf;
             if(compareTo(einf)<0){
                 if(esq!=null) esq.inserir(einf);
                 else esq=new NodeA(einf);
@@ -93,7 +89,7 @@ public class AcbEnll<E extends Comparable<E>> implements Acb<E>, Cloneable {
                 if(dret!=null){
                     dret=dret.esborrar(einf); return this;
                 } else throw new ArbreException("no hi es");
-            }else if(esq!=null&&dret!=null){ // CHECK
+            }else if(esq!=null&&dret!=null){ // CHECK: cant understand
                 dret=dret.esborrar(
                     dret.buscarMinim()
                 );
@@ -118,19 +114,20 @@ public class AcbEnll<E extends Comparable<E>> implements Acb<E>, Cloneable {
             return a.inf;
         }
         private void inordre(boolean sentit, Queue<E> c){ // TEST
-            NodeA a1=(sentit)?arrel.esq:arrel.dret;
-            NodeA a2=(sentit)?arrel.dret:arrel.esq;
+            NodeA a1=(sentit)?arrel.esq:arrel.dret; // CHECK may not work
+            NodeA a2=(sentit)?arrel.dret:arrel.esq; // CHECK may not work
 
             if(a1!=null) a1.inordre(sentit, c);
             c.add(arrel.inf);
             if(a2!=null) a2.inordre(sentit, c);
         }
 
-        // CHECK: necessary???
-        // @Override
-        // public int compareTo(E node) { // CHECK (check for correctnes + test)
-        //     return (int)inf-(int)((NodeA)node).inf;
-        // }
+        
+        // CHECK: here or in super + correct?
+        @Override
+        public int compareTo(E e) {
+            return (int)inf-(int)e;
+        }
 
         public Object clone(){
             NodeA copia=null;
