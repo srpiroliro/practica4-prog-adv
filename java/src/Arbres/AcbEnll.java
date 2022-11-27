@@ -5,7 +5,8 @@ import java.util.Queue;
 
 public class AcbEnll<E extends Comparable<E>> implements Acb<E>, Cloneable {
 
-    AcbEnll(NodeA n){arrel=n;cua=null;}
+    public AcbEnll(NodeA n){arrel=n;cua=null;}
+    public AcbEnll(){this(null);}
 
     public E arrel() throws ArbreException{
         if(arrel==null) throw new ArbreException("Arbre buit");
@@ -48,22 +49,14 @@ public class AcbEnll<E extends Comparable<E>> implements Acb<E>, Cloneable {
     }
 
     public E segRecorregut() throws ArbreException {
-        if(cua==null||finalRecorregut()) throw new ArbreException("Cal iniciar recorregut!");
+        if(finalRecorregut()) throw new ArbreException("Cal iniciar recorregut!");
         E element=cua.peek(); cua.remove();
         return element;
     }
 
     public Object clone(){return arrel.clone();}
-    public int cardinalitat(){return arrel.cardinalitat();}
+    public int cardinalitat(){return arrel.cardinalitat();} // copy=cua; iniRecorregut; cua.size; cua=copy;
 
-
-    // CHECK: here or in NodeA + correct?
-    // @Override
-    // public int compareTo(E e){
-    //     // if(!(e instanceof AcbEnll)) CHECK: necessary? 
-    //     return (int) arrel.inf-(int) e;
-    // }
-    
     private class NodeA implements Cloneable{
         NodeA esq, dret; E inf;
 
@@ -71,21 +64,21 @@ public class AcbEnll<E extends Comparable<E>> implements Acb<E>, Cloneable {
         NodeA(E e, NodeA l, NodeA r){inf=e; esq=l; dret=r;}
 
         private void inserir(E einf) throws ArbreException{
-            if(compareTo(einf)<0){
+            if(inf.compareTo(einf)<0){
                 if(esq!=null) esq.inserir(einf);
                 else esq=new NodeA(einf);
-            } else if(compareTo(einf)>0){
+            } else if(inf.compareTo(einf)>0){
                 if(dret!=null) dret.inserir(einf);
                 else dret=new NodeA(einf);
             } else throw new ArbreException("element ja hi es");
         }
 
         private NodeA esborrar(E einf) throws ArbreException{
-            if(compareTo(einf)<0){
+            if(inf.compareTo(einf)<0){
                 if(esq!=null){
                     esq=esq.esborrar(einf); return this;
                 } else throw new ArbreException("no hi es");
-            }else if(compareTo(einf)>0){
+            }else if(inf.compareTo(einf)>0){
                 if(dret!=null){
                     dret=dret.esborrar(einf); return this;
                 } else throw new ArbreException("no hi es");
@@ -103,8 +96,8 @@ public class AcbEnll<E extends Comparable<E>> implements Acb<E>, Cloneable {
         }
 
         private boolean hiEs(E einf){
-            if(compareTo(einf)<0) return (esq==null)?false:esq.hiEs(einf);
-            else if (compareTo(einf)>0) return (dret==null)?false:dret.hiEs(einf);
+            if(inf.compareTo(einf)<0) return (esq==null)?false:esq.hiEs(einf);
+            else if (inf.compareTo(einf)>0) return (dret==null)?false:dret.hiEs(einf);
             else return true;
         }
 
@@ -120,13 +113,6 @@ public class AcbEnll<E extends Comparable<E>> implements Acb<E>, Cloneable {
             if(a1!=null) a1.inordre(sentit, c);
             c.add(arrel.inf);
             if(a2!=null) a2.inordre(sentit, c);
-        }
-
-        
-        // CHECK: here or in super + correct?
-        @Override
-        public int compareTo(E e) {
-            return (int)inf-(int)e;
         }
 
         public Object clone(){
@@ -148,4 +134,7 @@ public class AcbEnll<E extends Comparable<E>> implements Acb<E>, Cloneable {
     }
     private Queue<E> cua=null;
     private NodeA arrel;
+
+    public Queue<E> getQueue(){return cua;}
+    public NodeA getArrel(){return arrel;}
 }
