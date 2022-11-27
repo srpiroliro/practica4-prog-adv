@@ -3,8 +3,6 @@ package Cartes;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import org.w3c.dom.Node;
-
 import Arbres.AcbEnll;
 
 public class Baralla{
@@ -16,7 +14,6 @@ public class Baralla{
     node root;
 
     Baralla(){
-
         // START -
         ArrayList<Carta> cartes=new ArrayList<Carta>();
         for(int pal=0;pal<4;pal++){
@@ -38,12 +35,7 @@ public class Baralla{
         //  - list of used pals/nums and generate numbers randomly until 
         //    theres no card with the same specs.
         //    POSSIBLE ITERATIONS: min. 48/ max. 
-
-
-
-
-        
     }
 
-
+    public node getRoot(){return root;}
 }
