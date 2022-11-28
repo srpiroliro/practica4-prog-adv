@@ -16,10 +16,7 @@ public class AcbEnll<E extends Comparable<E>> implements Acb<E>, Cloneable {
     public Acb<E> fillEsquerre(){ return new AcbEnll<E>((arrel==null)?null:arrel.esq); }
     public Acb<E> fillDret(){ return new AcbEnll<E>((arrel==null)?null:arrel.dret); }
     public boolean abBuit(){return arrel==null;}
-    public void buidar(){
-        arrel=null;
-        cua=null;
-    }
+    public void buidar(){arrel=null;cua=null;}
 
     public void inserir(E e) throws ArbreException{
         if(arrel==null) arrel=new NodeA(e, null, null);
@@ -54,8 +51,9 @@ public class AcbEnll<E extends Comparable<E>> implements Acb<E>, Cloneable {
         return element;
     }
 
-    public Object clone(){return arrel.clone();}
-    public int cardinalitat(){return arrel.cardinalitat();} // copy=cua; iniRecorregut; cua.size; cua=copy;
+    public Object clone(){return(abBuit())?null:arrel.clone();}
+    
+    public int cardinalitat(){return(abBuit())?0:arrel.cardinalitat();} // copy=cua; iniRecorregut; cua.size; cua=copy;
 
     private class NodeA implements Cloneable{
         NodeA esq, dret; E inf;
@@ -82,7 +80,7 @@ public class AcbEnll<E extends Comparable<E>> implements Acb<E>, Cloneable {
                 if(dret!=null){
                     dret=dret.esborrar(einf); return this;
                 } else throw new ArbreException("no hi es");
-            }else if(esq!=null&&dret!=null){ // CHECK: cant understand
+            }else if(esq!=null&&dret!=null){
                 dret=dret.esborrar(
                     dret.buscarMinim()
                 );
@@ -121,7 +119,10 @@ public class AcbEnll<E extends Comparable<E>> implements Acb<E>, Cloneable {
                 copia=(NodeA) super.clone();
                 if(esq!=null) copia.esq=(NodeA) esq.clone();
                 if(dret!=null) copia.dret=(NodeA) dret.clone();
-            }catch(CloneNotSupportedException e){}
+            }catch(CloneNotSupportedException e){
+                System.out.println("ERROR!");
+                e.printStackTrace();
+            }
             return copia;
         }
 
@@ -134,7 +135,4 @@ public class AcbEnll<E extends Comparable<E>> implements Acb<E>, Cloneable {
     }
     private Queue<E> cua=null;
     private NodeA arrel;
-
-    public Queue<E> getQueue(){return cua;}
-    public NodeA getArrel(){return arrel;}
 }

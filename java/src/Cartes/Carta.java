@@ -1,11 +1,11 @@
 // CHECK: fix compareTo
 package Cartes;
 
-public class Carta implements Comparable<Carta>{ // <E extends Comparable<E>>
+public class Carta implements Comparable<Carta>{
     private String pals[]={"COPA","ESPASA","OROS","BASTONS"};
 
-    private int numer; // 1-12
-    private int pal; // 0-3
+    private int numer;
+    private int pal;
 
     Carta(int p, int n){numer=n; pal=p;}
 
