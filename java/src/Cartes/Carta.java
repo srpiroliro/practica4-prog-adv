@@ -1,7 +1,7 @@
 // CHECK: fix compareTo
 package Cartes;
 
-public class Carta<E extends Comparable<E>>{
+public class Carta implements Comparable<Carta>{ // <E extends Comparable<E>>
     private String pals[]={"COPA","ESPASA","OROS","BASTONS"};
 
     private int numer; // 1-12
@@ -10,7 +10,7 @@ public class Carta<E extends Comparable<E>>{
     Carta(int p, int n){numer=n; pal=p;}
 
     @Override
-    public int compareTo(E e){
+    public int compareTo(Carta e){
         return (
             (pal*100+numer)-
             ((Carta) e).getPal()*100+((Carta) e).getNum()

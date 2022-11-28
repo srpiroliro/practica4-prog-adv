@@ -2,15 +2,12 @@
 
 package Cartes;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-
 import Arbres.AcbEnll;
 import Arbres.ArbreException;
 
 public class Main{
-    private static AcbEnll baralla_cartes(){ 
-        AcbEnll a=new AcbEnll();  
+    private static AcbEnll<Carta> baralla_cartes(){ 
+        AcbEnll<Carta> a=new AcbEnll<Carta>();  
         Baralla b=new Baralla();
 
         // START -
@@ -28,7 +25,7 @@ public class Main{
         // - END -> CHECK: solution based on methods inside Baralla?
     }
 
-    private static void visualitzar(AcbEnll b, boolean sentit){ // LinkedList<Carta> q
+    private static void visualitzar(AcbEnll<Carta> b, boolean sentit){ // LinkedList<Carta> q
         b.iniRecorregut(sentit);
         while(!b.finalRecorregut()){
             Carta c=null;
@@ -63,8 +60,8 @@ public class Main{
 
     public static void main(String[] args) {
         boolean cont=true, fst=true;
-        AcbEnll baralla=baralla_cartes();
-        AcbEnll copia=(AcbEnll) baralla.clone();
+        AcbEnll<Carta> baralla=baralla_cartes();
+        AcbEnll<Carta> copia=(AcbEnll<Carta>) baralla.clone();
 
         while(cont){
             visualitzar(baralla, false); // (LinkedList<Carta>) baralla.getQueue()
@@ -73,14 +70,8 @@ public class Main{
 
             cont=menu_options() && baralla.cardinalitat()>0; fst=false;
         }
-
         visualitzar(copia, true);
-
         eliminar_randoms();
-        
-
         // cloner.cardinalitat()-baralla.cardinalitat()
-    }
-
-    
+    }   
 }
