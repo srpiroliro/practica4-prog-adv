@@ -7,6 +7,5 @@
 3. Col·leccions de Java: Cua
 
 ## TO DO:
-- [X] Part 1 - CHECKs to do.
-- [X] Part 2 - CHECKs to do.
-- [ ] Part 3
+- [ ] Download Keyboard.jar
+- [ ] Test to see if it works
