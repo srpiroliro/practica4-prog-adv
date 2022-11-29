@@ -10,14 +10,13 @@ public class Main{
     private static AcbEnll<Carta> baralla_cartes(){ 
         AcbEnll<Carta> a=new AcbEnll<Carta>();  
         Baralla b=new Baralla();
-
-        Baralla.node seg=b.getRoot(); // CHECK: legal?
-        while(seg!=null){
+        Baralla aux=b;
+        
+        while(aux.getCarta()!=null){
             try{
-                a.inserir(seg.getC());
-                seg=seg.getSeg();
+                a.inserir(aux.getCarta());
+                aux=aux.getseg();
             }catch(ArbreException e){
-                System.out.println("ERROR!");
                 e.printStackTrace();
                 return null;
             }
@@ -83,7 +82,7 @@ public class Main{
 
         try{ 
             b.esborrar(carta);
-            System.out.println("carta eliminada "+carta);
+            System.out.println("\ncarta eliminada "+carta);
         }catch(ArbreException e){e.printStackTrace();}
 
         if(b.cardinalitat()==0) 
@@ -100,7 +99,7 @@ public class Main{
 
             try{
                 b.esborrar(c);
-                System.out.println("carta eliminada "+c);
+                System.out.println("\ncarta eliminada "+c);
             }catch(ArbreException e){e.printStackTrace();}
 
             visualitzar(b, true);

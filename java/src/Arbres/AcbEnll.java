@@ -52,12 +52,11 @@ public class AcbEnll<E extends Comparable<E>> implements Acb<E>, Cloneable {
     }
 
     public Object clone(){
-        if(abBuit()) return null;
-
         AcbEnll<E> c=null;
         try{
             c=(AcbEnll<E>) super.clone();
-            c.arrel=(AcbEnll<E>.NodeA) arrel.clone();
+            c.arrel=(arrel==null)? null : (NodeA) arrel.clone();
+            c.cua=(cua==null)? null : (Queue<E>) ((LinkedList<E>) cua).clone();
         }catch(CloneNotSupportedException e){e.printStackTrace();}
         return c;
     }
@@ -127,10 +126,7 @@ public class AcbEnll<E extends Comparable<E>> implements Acb<E>, Cloneable {
                 copia=(NodeA) super.clone();
                 if(esq!=null) copia.esq=(NodeA) esq.clone();
                 if(dret!=null) copia.dret=(NodeA) dret.clone();
-            }catch(CloneNotSupportedException e){
-                System.out.println("ERROR!");
-                e.printStackTrace();
-            }
+            }catch(CloneNotSupportedException e){e.printStackTrace();}
             return copia;
         }
 

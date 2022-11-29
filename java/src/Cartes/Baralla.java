@@ -3,13 +3,10 @@ package Cartes;
 import java.util.ArrayList;
 import java.util.Collections;
 public class Baralla{
-    public class node{
+    private class node{
         node seg=null;
         Carta c=null;
         node(Carta carta){c=carta;}
-
-        public node getSeg(){return seg;}
-        public Carta getC(){return c;}
     }
     node root;
 
@@ -22,12 +19,14 @@ public class Baralla{
         }
         Collections.shuffle(cartes);
 
-        root=new node(cartes.get(0)); 
-        node aux=root; cartes.remove(0);
+        root=new node(cartes.remove(0)); 
+        node aux=root;
         for(Carta carta:cartes){
             aux.seg=new node(carta); aux=aux.seg; 
         }
     }
+    Baralla(node r){root=r;}
 
-    public node getRoot(){return root;}
+    public Baralla getseg(){return new Baralla(root.seg);}
+    public Carta getCarta(){return (root==null)?null:root.c;}
 }

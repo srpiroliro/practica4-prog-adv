@@ -1,4 +1,3 @@
-// CHECK: fix compareTo
 package Cartes;
 
 public class Carta implements Comparable<Carta>{
@@ -9,6 +8,9 @@ public class Carta implements Comparable<Carta>{
 
     Carta(int p, int n){numer=n; pal=p;}
 
+    public int getPal(){return pal;}
+    public int getNum(){return numer;}
+
     @Override
     public int compareTo(Carta e){
         return (
@@ -17,10 +19,8 @@ public class Carta implements Comparable<Carta>{
         );
     }
 
+    @Override
     public String toString(){
         return pals[pal]+"-"+numer+"; ";
     }
-
-    public int getPal(){return pal;}
-    public int getNum(){return numer;}
 }
