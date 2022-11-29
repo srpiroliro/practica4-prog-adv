@@ -36,7 +36,7 @@ public class AcbEnll<E extends Comparable<E>> implements Acb<E>, Cloneable {
 
     public void iniRecorregut(boolean sentit){
         if(arrel!=null){
-            cua=new LinkedList<>();
+            cua=new LinkedList<E>();
             arrel.inordre(sentit, cua);
         }
     }
