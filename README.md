@@ -5,7 +5,3 @@
 1. Implementació de l’estructura de dades Arbre de Cerca Binària (Acb). Generecitat usant la notació <E> 
 2. Implementació de mètodes aplicant la tècnica del Divideix i Venç 
 3. Col·leccions de Java: Cua
-
-## TO DO:
-- [ ] Download Keyboard.jar
-- [ ] Test to see if it works
