@@ -21,20 +21,20 @@ public class AcbEnll<E extends Comparable<E>> implements Acb<E>, Cloneable {
     public void inserir(E e) throws ArbreException{
         if(arrel==null) arrel=new NodeA(e, null, null);
         else arrel.inserir(e);
-        cua=null; // CHECK: will execute if an exception is thrown before?
+        cua=null;
     }
 
     public void esborrar(E e) throws ArbreException{
         if(arrel==null) throw new ArbreException("l'arbre es buit");
         arrel=arrel.esborrar(e);
-        cua=null; // CHECK: will execute if an exception is thrown before?
+        cua=null;
     }
 
     public boolean membre(E e){
         return (arrel==null)?false:arrel.hiEs(e);
     }
 
-    public void iniRecorregut(boolean sentit){ // TEST
+    public void iniRecorregut(boolean sentit){
         if(arrel!=null){
             cua=new LinkedList<>();
             arrel.inordre(sentit, cua);
@@ -47,13 +47,22 @@ public class AcbEnll<E extends Comparable<E>> implements Acb<E>, Cloneable {
 
     public E segRecorregut() throws ArbreException {
         if(finalRecorregut()) throw new ArbreException("Cal iniciar recorregut!");
-        E element=cua.peek(); cua.remove();
+        E element=cua.remove();
         return element;
     }
 
-    public Object clone(){return(abBuit())?null:arrel.clone();}
+    public Object clone(){
+        if(abBuit()) return null;
+
+        AcbEnll<E> c=null;
+        try{
+            c=(AcbEnll<E>) super.clone();
+            c.arrel=(AcbEnll<E>.NodeA) arrel.clone();
+        }catch(CloneNotSupportedException e){e.printStackTrace();}
+        return c;
+    }
     
-    public int cardinalitat(){return(abBuit())?0:arrel.cardinalitat();} // copy=cua; iniRecorregut; cua.size; cua=copy;
+    public int cardinalitat(){return(abBuit())?0:arrel.cardinalitat();}
 
     private class NodeA implements Cloneable{
         NodeA esq, dret; E inf;
@@ -81,9 +90,8 @@ public class AcbEnll<E extends Comparable<E>> implements Acb<E>, Cloneable {
                     dret=dret.esborrar(einf); return this;
                 } else throw new ArbreException("no hi es");
             }else if(esq!=null&&dret!=null){
-                dret=dret.esborrar(
-                    dret.buscarMinim()
-                );
+                inf=dret.buscarMinim();
+                dret=dret.esborrar(inf);
                 return this;
             }else 
                 return(
@@ -104,12 +112,12 @@ public class AcbEnll<E extends Comparable<E>> implements Acb<E>, Cloneable {
             NodeA a=esq; while(a.esq!=null) a=a.esq;
             return a.inf;
         }
-        private void inordre(boolean sentit, Queue<E> c){ // TEST
-            NodeA a1=(sentit)?arrel.esq:arrel.dret; // CHECK may not work
-            NodeA a2=(sentit)?arrel.dret:arrel.esq; // CHECK may not work
+        private void inordre(boolean sentit, Queue<E> c){
+            NodeA a1=(sentit)?esq:dret;
+            NodeA a2=(sentit)?dret:esq;
 
             if(a1!=null) a1.inordre(sentit, c);
-            c.add(arrel.inf);
+            c.add(inf);
             if(a2!=null) a2.inordre(sentit, c);
         }
 

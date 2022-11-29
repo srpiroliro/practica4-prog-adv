@@ -1,19 +1,17 @@
-// CHECK: how to fix "AcbEnll is a raw type. References to generic type AcbEnll<E> should be parameterized"
-
 package Cartes;
 
 import java.util.Random;
 
 import Arbres.AcbEnll;
 import Arbres.ArbreException;
+import Keyboard.Keyboard;
 
 public class Main{
     private static AcbEnll<Carta> baralla_cartes(){ 
         AcbEnll<Carta> a=new AcbEnll<Carta>();  
         Baralla b=new Baralla();
 
-        // START -
-        Baralla.node seg=b.getRoot();
+        Baralla.node seg=b.getRoot(); // CHECK: legal?
         while(seg!=null){
             try{
                 a.inserir(seg.getC());
@@ -25,24 +23,27 @@ public class Main{
             }
         }
         return a;
-        // - END -> CHECK: solution based on methods inside Baralla?
     }
-
     private static void visualitzar(AcbEnll<Carta> b, boolean sentit){
+
         b.iniRecorregut(sentit);
         while(!b.finalRecorregut()){
-            try{ System.out.print(b.segRecorregut());
-            } catch(ArbreException e){} // mai passara.
+            try {
+                Carta c=b.segRecorregut();
+                System.out.print(c);
+            } catch (ArbreException e) {
+                e.printStackTrace();
+            }
         }
-        System.out.println();
+        System.out.println("\n");
     }
-
     private static boolean menu_options(){
         System.out.println("Menu Opcions\n==============\n1.- Eliminar carta\n2.- Acabar\nTria que vols fer (1 o 2):");
         int response=Keyboard.readInt();
+        System.out.println();
+
         return(1==response);
     }
-
     private static Carta triar_carta_existent(AcbEnll<Carta> b){
         Carta c=null; boolean missing=true;
         while(missing){
@@ -62,7 +63,6 @@ public class Main{
         }
         return c;
     }
-
     private static int getRandInt(int min, int max){
         Random random=new Random();
         return random.nextInt(max - min) + min;
@@ -71,25 +71,24 @@ public class Main{
         int r=max+1;
         while(r<min||r>max){
             System.out.println("["+min+", "+max+"]: ");
-            r=Keyboard.readString();
+            r=Keyboard.readInt();
         }
         return r;
     }
     private static void eliminar(AcbEnll<Carta> b){
         Carta carta=null;
 
-        System.out.println("Menu Eliminar Cartes\n=================");
+        System.out.println("Menu Eliminar Cartes");
         carta=triar_carta_existent(b);
 
         try{ 
             b.esborrar(carta);
             System.out.println("carta eliminada "+carta);
-        }catch(ArbreException e){}
+        }catch(ArbreException e){e.printStackTrace();}
 
         if(b.cardinalitat()==0) 
             System.out.println("Ja no hi han mes cartes per eliminar.");
     }
-
     private static void eliminar_randoms(AcbEnll<Carta> b){
         for(int i=0;i<getRandInt(1,b.cardinalitat());i++) {
             Carta c=null; boolean is404=true;
@@ -102,11 +101,12 @@ public class Main{
             try{
                 b.esborrar(c);
                 System.out.println("carta eliminada "+c);
-            }catch(ArbreException e){}
+            }catch(ArbreException e){e.printStackTrace();}
 
-            visualitzar(b, false);
+            visualitzar(b, true);
         }
     }
+
 
     public static void main(String[] args) {
         boolean cont=true, fst=true;
@@ -121,9 +121,7 @@ public class Main{
         visualitzar(backup, true);
         eliminar_randoms(backup);
 
-        System.out.println(
-            "Resultat:\nOriginal: "+baralla.cardinalitat()+
-            "\nCopia: "+backup.cardinalitat()
-        );
+        int res=baralla.cardinalitat()-backup.cardinalitat();
+        System.out.println("Resultat: "+((res==0)?"son iguals": (res>0)?"Original es mes gran":"Copia es mes gran"));
     }
 }

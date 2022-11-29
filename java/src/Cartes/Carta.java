@@ -13,12 +13,8 @@ public class Carta implements Comparable<Carta>{
     public int compareTo(Carta e){
         return (
             (pal*100+numer)-
-            ((Carta) e).getPal()*100+((Carta) e).getNum()
+            (((Carta) e).getPal()*100+((Carta) e).getNum())
         );
-
-        // if(((Carta) e).getPal()==pal){
-        //     return numer-((Carta) e).getNum();
-        // }else return (pal-((Carta) e).getPal())*100;
     }
 
     public String toString(){
